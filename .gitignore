@@ -4,3 +4,7 @@ __pycache__/
 dist/
 build/
 .DS_Store
+*.csv
+*.egg-info/
+input/
+output/

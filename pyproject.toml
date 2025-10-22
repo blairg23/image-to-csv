@@ -1,17 +1,25 @@
 [tool.poetry]
 name = "image-to-csv"
 version = "0.1.0"
-description = "Python library"
+description = "CLI to convert table images into CSV using OCR."
 authors = ["Blair Gemmer"]
 license = "MIT"
 readme = "README.md"
 packages = [{ include = "image_to_csv", from = "src" }]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.13"
+python = "3.10.*"
+opencv-python = "^4.10.0.84"
+pandas = "^2.2.2"
+lxml = "^5.2.2"
+typer = "0.9.0"
+click = "8.1.7"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
+
+[tool.poetry.scripts]
+image-to-csv = "image_to_csv.cli:app"
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]
