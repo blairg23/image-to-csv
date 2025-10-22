@@ -40,7 +40,6 @@ def folder(
     clean: bool = typer.Option(True, "--clean", "-c", help="Apply denoise/binarize/deskew"),
     glob: str = typer.Option("*.jpg", "--glob", "-g", help="Glob pattern for images"),
 ):
-    print('did we make it here?')
     """Batch convert all images in a folder."""
     paths = sorted(path.glob(glob))
     if not paths:

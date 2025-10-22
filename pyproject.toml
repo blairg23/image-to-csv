@@ -9,9 +9,9 @@ packages = [{ include = "image_to_csv", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.11"
-opencv-python = "^4.10.0.84"
+opencv-python = ">=4.12,<5.0"
 pandas = "^2.2.2"
-numpy ="^2.3.4"
+numpy =">=2,<2.3.0"
 lxml = "^6.0.2"
 typer = "^0.20.0"
 click = ">=8.0.0"
@@ -28,6 +28,7 @@ optional = true
 [tool.poetry.group.paddle.dependencies]
 paddleocr = "^2.7"
 paddlepaddle = "^2.6"
+setuptools = "^80.9.0"
 
 [tool.poetry.group.tesseract]
 optional = true
