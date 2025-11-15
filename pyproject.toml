@@ -22,20 +22,16 @@ pytest = "^8.0.0"
 [tool.poetry.scripts]
 image-to-csv = "image_to_csv.cli:app"
 
-[tool.poetry.group.paddle]
-optional = true
-
 [tool.poetry.group.paddle.dependencies]
-paddleocr = "^2.7"
-paddlepaddle = "^2.6"
-setuptools = "^80.9.0"
-
-[tool.poetry.group.tesseract]
-optional = true
+# current stable (CPU) combo
+paddleocr = "*"
+paddlepaddle = "*"
+setuptools = "^75.0"
 
 [tool.poetry.group.tesseract.dependencies]
 pytesseract = "^0.3.10"
 pillow = "^10.4"
+
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]
