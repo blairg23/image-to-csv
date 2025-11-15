@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import cv2
 from .preprocess import preprocess
-from .ocr import ocr_table_paddle, ocr_lines_tesseract
+from .ocr import ocr_table_paddle, ocr_lines_tesseract, get_paddle_engine
 from .table_to_csv import html_to_df, lines_to_df
 
 app = typer.Typer(add_completion=False, help="Convert table images into CSV using OCR")
@@ -23,8 +23,9 @@ def file(
 ):
     """Process a single image file."""
     img = preprocess(_load_image(path), do_clean=clean)
-    if engine == "paddle":
-        html = ocr_table_paddle(img)
+    paddle_engine = get_paddle_engine() if engine == "paddle" else None
+    if paddle_engine:
+        html = ocr_table_paddle(img, engine=paddle_engine)
         df = html_to_df(html) if html else lines_to_df(ocr_lines_tesseract(img))
     else:
         df = lines_to_df(ocr_lines_tesseract(img))
@@ -45,11 +46,12 @@ def folder(
     if not paths:
         raise typer.BadParameter(f"No files matched {glob} in {path}")
     frames = []
+    paddle_engine = get_paddle_engine() if engine == "paddle" else None
     for p in paths:
         typer.echo(f"Processing {p.name} ...")
         img = preprocess(_load_image(p), do_clean=clean)
-        if engine == "paddle":
-            html = ocr_table_paddle(img)
+        if paddle_engine:
+            html = ocr_table_paddle(img, engine=paddle_engine)
             df = html_to_df(html) if html else lines_to_df(ocr_lines_tesseract(img))
         else:
             df = lines_to_df(ocr_lines_tesseract(img))

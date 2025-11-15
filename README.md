@@ -20,3 +20,20 @@ Run tests:
 ```
 poetry run pytest -q
 ```
+
+## System dependencies
+
+Before installing the Python packages, make sure the following system packages are available (Ubuntu/Debian example):
+
+```
+sudo apt update
+sudo apt install -y tesseract-ocr libgl1 libglib2.0-0 ccache
+```
+
+- `tesseract-ocr` is required for the text fallback when PaddleOCR does not return table HTML.
+- `libgl1` and `libglib2.0-0` are needed by OpenCV/Paddle’s binary wheels.
+- `ccache` is optional but prevents repeated recompiles when Paddle builds extensions.
+
+## Paddle engine caching
+
+When running with the default Paddle engine, the `PPStructure` model is initialized once per process and reused for every image to avoid repeated startup costs. Advanced users can reset the cached engine from Python by calling `image_to_csv.ocr.reset_paddle_engine()` before the next invocation if they need a fresh instance (for example, in tests).
