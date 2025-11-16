@@ -22,6 +22,9 @@ pytest = "^8.0.0"
 [tool.poetry.scripts]
 image-to-csv = "image_to_csv.cli:app"
 
+[tool.poetry.group.paddle]
+optional = true
+
 [tool.poetry.group.paddle.dependencies]
 # current stable (CPU) combo
 paddleocr = "*"
@@ -29,6 +32,9 @@ paddlepaddle = "==3.2.0"
 setuptools = "^75.0"
 bce-python-sdk = ">=0.9"
 paddlex = { version = ">=3.3.4,<3.4.0", extras = ["ocr"] }
+
+[tool.poetry.group.tesseract]
+optional = true
 
 [tool.poetry.group.tesseract.dependencies]
 pytesseract = "^0.3.10"
