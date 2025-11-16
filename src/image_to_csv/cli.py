@@ -9,11 +9,13 @@ from .table_to_csv import html_to_df, lines_to_df
 
 app = typer.Typer(add_completion=False, help="Convert table images into CSV using OCR")
 
+
 def _load_image(p: Path):
     img = cv2.imread(str(p))
     if img is None:
         raise typer.BadParameter(f"Cannot read image: {p}")
     return img
+
 
 def _build_paddle_debug_callback(image_label: str, save_dir: Optional[Path]):
     """Create a debug callback that logs Paddle detections."""
@@ -34,7 +36,7 @@ def _build_paddle_debug_callback(image_label: str, save_dir: Optional[Path]):
             preview = " ".join(html.split())
             if len(preview) > 160:
                 preview = preview[:160] + "..."
-            typer.echo(f"  table {idx}: preview=\"{preview}\"")
+            typer.echo(f'  table {idx}: preview="{preview}"')
             if save_dir and html:
                 stem = Path(image_label).stem
                 target = save_dir / f"{stem}_table{idx}.html"
@@ -43,7 +45,9 @@ def _build_paddle_debug_callback(image_label: str, save_dir: Optional[Path]):
                     typer.echo(f"    saved HTML -> {target}")
                 except Exception as exc:
                     typer.echo(f"    failed to save HTML to {target}: {exc}")
+
     return _callback
+
 
 @app.command()
 def file(
@@ -56,7 +60,9 @@ def file(
         help="OCR backend to use (paddle or tesseract)",
     ),
     clean: bool = typer.Option(True, "--clean", help="Apply denoise/binarize/deskew"),
-    debug_tables: bool = typer.Option(False, "--debug-tables", help="Log Paddle table detections"),
+    debug_tables: bool = typer.Option(
+        False, "--debug-tables", help="Log Paddle table detections"
+    ),
     debug_tables_dir: Optional[Path] = typer.Option(
         None,
         "--debug-tables-dir",
@@ -69,10 +75,16 @@ def file(
     if debug_tables_dir:
         debug_tables = True
     if paddle_engine:
-        debug_cb = _build_paddle_debug_callback(path.name, debug_tables_dir) if debug_tables else None
+        debug_cb = (
+            _build_paddle_debug_callback(path.name, debug_tables_dir)
+            if debug_tables
+            else None
+        )
         html = ocr_table_paddle(img, engine=paddle_engine, debug_callback=debug_cb)
         if debug_tables and not html:
-            typer.echo(f"[Paddle][{path.name}] no table HTML detected, falling back to tesseract")
+            typer.echo(
+                f"[Paddle][{path.name}] no table HTML detected, falling back to tesseract"
+            )
         df = html_to_df(html) if html else lines_to_df(ocr_lines_tesseract(img))
     else:
         df = lines_to_df(ocr_lines_tesseract(img))
@@ -85,14 +97,18 @@ def folder(
     path: Path = typer.Argument(..., help="Input folder path"),
     out: Path = typer.Option(..., "--out", "-o", help="Combined CSV output file"),
     engine: str = typer.Option("paddle", "--engine", "-e", help="paddle or tesseract"),
-    clean: bool = typer.Option(True, "--clean", "-c", help="Apply denoise/binarize/deskew"),
+    clean: bool = typer.Option(
+        True, "--clean", "-c", help="Apply denoise/binarize/deskew"
+    ),
     glob: str = typer.Option(
         "*.jpg",
         "--glob",
         "-g",
         help="Glob pattern for images (default: *.jpg)",
     ),
-    debug_tables: bool = typer.Option(False, "--debug-tables", help="Log Paddle table detections"),
+    debug_tables: bool = typer.Option(
+        False, "--debug-tables", help="Log Paddle table detections"
+    ),
     debug_tables_dir: Optional[Path] = typer.Option(
         None,
         "--debug-tables-dir",
@@ -111,10 +127,16 @@ def folder(
         typer.echo(f"Processing {p.name} ...")
         img = preprocess(_load_image(p), do_clean=clean)
         if paddle_engine:
-            debug_cb = _build_paddle_debug_callback(p.name, debug_tables_dir) if debug_tables else None
+            debug_cb = (
+                _build_paddle_debug_callback(p.name, debug_tables_dir)
+                if debug_tables
+                else None
+            )
             html = ocr_table_paddle(img, engine=paddle_engine, debug_callback=debug_cb)
             if debug_tables and not html:
-                typer.echo(f"[Paddle][{p.name}] no table HTML detected, falling back to tesseract")
+                typer.echo(
+                    f"[Paddle][{p.name}] no table HTML detected, falling back to tesseract"
+                )
             df = html_to_df(html) if html else lines_to_df(ocr_lines_tesseract(img))
         else:
             df = lines_to_df(ocr_lines_tesseract(img))
@@ -123,7 +145,6 @@ def folder(
     all_df = pd.concat(frames, ignore_index=True)
     all_df.to_csv(out, index=False)
     typer.echo(f"Wrote {len(all_df)} rows from {len(frames)} files -> {out}")
-
 
 
 if __name__ == "__main__":

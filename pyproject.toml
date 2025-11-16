@@ -18,6 +18,11 @@ click = ">=8.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
+black = "^24.10"
+ruff = "^0.6.9"
+mypy = "^1.11"
+tox = "^4.20"
+pre-commit = "^3.7"
 
 [tool.poetry.scripts]
 image-to-csv = "image_to_csv.cli:app"
@@ -39,6 +44,27 @@ optional = true
 [tool.poetry.group.tesseract.dependencies]
 pytesseract = "^0.3.10"
 pillow = "^10.4"
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = [
+    "cv2",
+    "cv2.*",
+    "numpy",
+    "numpy.*",
+    "pytesseract",
+    "PIL",
+    "PIL.*",
+    "pandas",
+    "pandas.*",
+    "typer",
+    "typer.*",
+]
+ignore_missing_imports = true
 
 
 [build-system]

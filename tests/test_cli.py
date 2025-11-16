@@ -5,7 +5,6 @@ import numpy as np
 import typer.testing
 
 from image_to_csv import cli
-import image_to_csv.ocr as ocr_module
 
 
 def _fake_image(path: Path):
@@ -43,7 +42,7 @@ def test_file_command_runs_with_tesseract_engine(monkeypatch):
         def fake_lines(_img):
             return ["A  B", "1  2"]
 
-        monkeypatch.setattr(ocr_module, "ocr_lines_tesseract", fake_lines)
+        monkeypatch.setattr(cli, "ocr_lines_tesseract", fake_lines)
         result = runner.invoke(
             cli.app,
             [

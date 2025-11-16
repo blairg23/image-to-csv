@@ -34,6 +34,7 @@ def test_ocr_table_paddle_caches_engine(monkeypatch):
 
 def test_ocr_table_paddle_debug_callback(monkeypatch):
     """Debug callbacks receive the raw Paddle response."""
+
     class FakeEngine:
         def __call__(self, img):
             return [{"type": "table", "res": {"html": "<table></table>"}}]
@@ -41,7 +42,9 @@ def test_ocr_table_paddle_debug_callback(monkeypatch):
     def fake_factory(*args, **kwargs):
         return FakeEngine()
 
-    monkeypatch.setitem(sys.modules, "paddleocr", types.SimpleNamespace(PPStructure=fake_factory))
+    monkeypatch.setitem(
+        sys.modules, "paddleocr", types.SimpleNamespace(PPStructure=fake_factory)
+    )
     ocr.reset_paddle_engine()
     img = np.zeros((2, 2, 3), dtype=np.uint8)
     captured = []
