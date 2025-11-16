@@ -6,13 +6,19 @@ Convert table images into CSVs using OCR.
 
 ```
 poetry install
-poetry run image-to-csv file path/to/image.jpg --out output.csv
+poetry run image-to-csv file path/to/image.jpg --out output.csv --engine paddle
+```
+
+Use `--engine tesseract` to skip Paddle when it is not installed:
+
+```
+poetry run image-to-csv file path/to/image.jpg --out output.csv --engine tesseract
 ```
 
 Batch a folder:
 
 ```
-poetry run image-to-csv folder path/to/images --out combined.csv
+poetry run image-to-csv folder path/to/images --out combined.csv --glob "*.jpg"
 ```
 
 Run tests:
