@@ -22,6 +22,7 @@ black = "^24.10"
 ruff = "^0.6.9"
 mypy = "^1.11"
 tox = "^4.20"
+pre-commit = "^3.7"
 
 [tool.poetry.scripts]
 image-to-csv = "image_to_csv.cli:app"
