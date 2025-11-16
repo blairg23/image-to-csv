@@ -49,7 +49,12 @@ def _build_paddle_debug_callback(image_label: str, save_dir: Optional[Path]):
 def file(
     path: Path = typer.Argument(..., help="Input image path"),
     out: Path = typer.Option(..., "--out", "-o", help="Output CSV file"),
-    engine: str = typer.Option("paddle", "--engine", "-e", help="paddle or tesseract"),
+    engine: str = typer.Option(
+        "paddle",
+        "--engine",
+        "-e",
+        help="OCR backend to use (paddle or tesseract)",
+    ),
     clean: bool = typer.Option(True, "--clean", help="Apply denoise/binarize/deskew"),
     debug_tables: bool = typer.Option(False, "--debug-tables", help="Log Paddle table detections"),
     debug_tables_dir: Optional[Path] = typer.Option(
@@ -81,7 +86,12 @@ def folder(
     out: Path = typer.Option(..., "--out", "-o", help="Combined CSV output file"),
     engine: str = typer.Option("paddle", "--engine", "-e", help="paddle or tesseract"),
     clean: bool = typer.Option(True, "--clean", "-c", help="Apply denoise/binarize/deskew"),
-    glob: str = typer.Option("*.jpg", "--glob", "-g", help="Glob pattern for images"),
+    glob: str = typer.Option(
+        "*.jpg",
+        "--glob",
+        "-g",
+        help="Glob pattern for images (default: *.jpg)",
+    ),
     debug_tables: bool = typer.Option(False, "--debug-tables", help="Log Paddle table detections"),
     debug_tables_dir: Optional[Path] = typer.Option(
         None,
