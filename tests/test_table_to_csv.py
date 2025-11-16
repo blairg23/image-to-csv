@@ -23,7 +23,12 @@ def test_lines_to_df_handles_pipe_delimiter():
         "| Bob | 8 |",
     ]
     df = lines_to_df(lines)
-    pd.testing.assert_series_equal(df["Name"], pd.Series(["Alice", "Bob"], name="Name"), check_names=True, check_dtype=False)
+    pd.testing.assert_series_equal(
+        df["Name"],
+        pd.Series(["Alice", "Bob"], name="Name"),
+        check_names=True,
+        check_dtype=False,
+    )
 
 
 def test_lines_to_df_returns_text_column_when_no_table():

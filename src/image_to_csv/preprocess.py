@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 def preprocess(img_bgr, do_clean=True):
     """Convert to grayscale, denoise, binarize, and deskew."""
     if not do_clean:
@@ -11,9 +12,14 @@ def preprocess(img_bgr, do_clean=True):
     th = deskew(th)
     return cv2.cvtColor(th, cv2.COLOR_GRAY2BGR)
 
+
 def deskew(gray_or_bin):
     """Estimate skew angle and rotate to fix it."""
-    gray = gray_or_bin if len(gray_or_bin.shape) == 2 else cv2.cvtColor(gray_or_bin, cv2.COLOR_BGR2GRAY)
+    gray = (
+        gray_or_bin
+        if len(gray_or_bin.shape) == 2
+        else cv2.cvtColor(gray_or_bin, cv2.COLOR_BGR2GRAY)
+    )
     edges = cv2.Canny(gray, 50, 150, apertureSize=3)
     lines = cv2.HoughLines(edges, 1, np.pi / 180, 200)
     angle = 0.0
@@ -30,4 +36,6 @@ def deskew(gray_or_bin):
         return gray
     h, w = gray.shape[:2]
     M = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1.0)
-    return cv2.warpAffine(gray, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    return cv2.warpAffine(
+        gray, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE
+    )

@@ -6,6 +6,7 @@ from typing import List
 
 logger = logging.getLogger(__name__)
 
+
 def html_to_df(html: str) -> pd.DataFrame:
     """Convert OCR HTML table output into a DataFrame."""
     dfs = pd.read_html(io.StringIO(html))
@@ -16,7 +17,9 @@ def html_to_df(html: str) -> pd.DataFrame:
     df = df.applymap(lambda x: str(x).strip() if isinstance(x, str) else x)
     return df
 
+
 _SPLIT_RE = re.compile(r"\s{2,}|\t")
+
 
 def _tokenize(line: str):
     stripped = line.strip()
@@ -37,6 +40,7 @@ def _tokenize(line: str):
     parts = stripped.split()
     return parts, False
 
+
 def lines_to_df(lines: List[str]) -> pd.DataFrame:
     """Convert raw text lines into a simple table DataFrame."""
     rows = []
@@ -51,7 +55,11 @@ def lines_to_df(lines: List[str]) -> pd.DataFrame:
                 reliable_rows.append((idx, tokens))
     if len(indexed_rows) < 2:
         clean = [ln.strip() for ln in lines if ln.strip()]
-        return pd.DataFrame(clean, columns=["text"]) if clean else pd.DataFrame(columns=["text"])
+        return (
+            pd.DataFrame(clean, columns=["text"])
+            if clean
+            else pd.DataFrame(columns=["text"])
+        )
 
     candidates = reliable_rows or indexed_rows
 
@@ -60,12 +68,14 @@ def lines_to_df(lines: List[str]) -> pd.DataFrame:
         width_counts[len(row)] = width_counts.get(len(row), 0) + 1
     target_width = max(width_counts, key=lambda k: (width_counts[k], k))
 
-    header_idx = next((idx for idx, row in candidates if len(row) == target_width), candidates[0][0])
+    header_idx = next(
+        (idx for idx, row in candidates if len(row) == target_width), candidates[0][0]
+    )
     headers = rows[header_idx]["tokens"][:target_width]
     headers = [str(c).strip() or f"Column {i+1}" for i, c in enumerate(headers)]
 
     data_rows = []
-    for row_info in rows[header_idx + 1:]:
+    for row_info in rows[header_idx + 1 :]:
         row = row_info["tokens"]
         if not row:
             continue
@@ -73,7 +83,9 @@ def lines_to_df(lines: List[str]) -> pd.DataFrame:
         if len(cur) < target_width:
             cur.extend([""] * (target_width - len(cur)))
         elif len(row) > target_width:
-            logger.debug("Truncating row with width %s to %s columns", len(row), target_width)
+            logger.debug(
+                "Truncating row with width %s to %s columns", len(row), target_width
+            )
         data_rows.append(cur)
 
     if not data_rows:
