@@ -2,7 +2,7 @@ import io
 import logging
 import re
 import pandas as pd
-from typing import List
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ def lines_to_df(lines: List[str]) -> pd.DataFrame:
 
     candidates = reliable_rows or indexed_rows
 
-    width_counts = {}
+    width_counts: Dict[int, int] = {}
     for _, row in candidates:
         width_counts[len(row)] = width_counts.get(len(row), 0) + 1
     target_width = max(width_counts, key=lambda k: (width_counts[k], k))

@@ -11,6 +11,11 @@ from image_to_csv import ocr
 def test_ocr_lines_tesseract_converts_text(monkeypatch):
     fake_module = types.SimpleNamespace(image_to_string=lambda img: "foo\nbar\n")
     monkeypatch.setitem(sys.modules, "pytesseract", fake_module)
+    monkeypatch.setitem(
+        sys.modules,
+        "PIL",
+        types.SimpleNamespace(Image=types.SimpleNamespace(fromarray=lambda img: img)),
+    )
     img = np.zeros((3, 3, 3), dtype=np.uint8)
     lines = ocr.ocr_lines_tesseract(img)
     assert lines == ["foo", "bar"]
