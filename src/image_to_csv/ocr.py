@@ -1,6 +1,6 @@
 import inspect
 from importlib import import_module
-from typing import List
+from typing import Callable, List, Optional
 import numpy as np
 import cv2
 
@@ -61,7 +61,11 @@ def reset_paddle_engine():
     global _paddle_engine
     _paddle_engine = None
 
-def ocr_table_paddle(img_bgr, engine=None):
+def ocr_table_paddle(
+    img_bgr,
+    engine=None,
+    debug_callback: Optional[Callable[[Optional[list]], None]] = None,
+):
     """Run PaddleOCR table recognition and return extracted HTML if available.
 
     The Paddle engine is cached per process, so repeated calls avoid expensive
@@ -80,6 +84,11 @@ def ocr_table_paddle(img_bgr, engine=None):
             raise RuntimeError("Unsupported PaddleOCR engine type; no callable/predict interface")
     except Exception as e:
         raise RuntimeError(f"PaddleOCR inference failed: {e}") from e
+    if debug_callback:
+        try:
+            debug_callback(result)
+        except Exception:
+            pass
     for item in result or []:
         res = item.get("res", {})
         if item.get("type") == "table" and isinstance(res, dict) and "html" in res:
