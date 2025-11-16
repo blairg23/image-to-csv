@@ -37,3 +37,5 @@ sudo apt install -y tesseract-ocr libgl1 libglib2.0-0 ccache
 ## Paddle engine caching
 
 When running with the default Paddle engine, the `PPStructure` model is initialized once per process and reused for every image to avoid repeated startup costs. Advanced users can reset the cached engine from Python by calling `image_to_csv.ocr.reset_paddle_engine()` before the next invocation if they need a fresh instance (for example, in tests).
+
+To inspect what Paddle believes it detected, run either command with `--debug-tables`. This will print a summary of the tables Paddle returned; add `--debug-tables-dir path/to/debug_html` to also save each raw HTML snippet for offline review.
