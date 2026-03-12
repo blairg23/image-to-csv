@@ -18,7 +18,7 @@ click = ">=8.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
-black = "^24.10"
+black = "^26.3"
 ruff = "^0.6.9"
 mypy = "^1.11"
 tox = "^4.20"
@@ -34,7 +34,7 @@ optional = true
 # current stable (CPU) combo
 paddleocr = "*"
 paddlepaddle = "==3.2.0"
-setuptools = "^75.0"
+setuptools = "^78.1"
 bce-python-sdk = ">=0.9"
 paddlex = { version = ">=3.3.4,<3.4.0", extras = ["ocr"] }
 
@@ -43,7 +43,7 @@ optional = true
 
 [tool.poetry.group.tesseract.dependencies]
 pytesseract = "^0.3.10"
-pillow = "^10.4"
+pillow = "^12.1"
 
 [tool.mypy]
 python_version = "3.12"
